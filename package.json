@@ -1,9 +1,8 @@
 {
-  "name": "network-app",
+  "name": "network-graph-app",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --mode development",
     "start": "webpack serve --open --config webpack.config.js"
   },

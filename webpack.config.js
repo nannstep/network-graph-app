@@ -23,6 +23,7 @@ module.exports = {
   plugins: [
     new CopyPlugin({
       patterns: [
+        { from: "index.html" },
         { from: "src/jon_sample_data.csv", to: "jon_sample_data.csv" },
       ],
     }),
