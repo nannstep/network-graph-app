@@ -1,4 +1,5 @@
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
@@ -11,6 +12,7 @@ module.exports = {
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
+    clean: true,
   },
   module: {
     rules: [
@@ -21,9 +23,12 @@ module.exports = {
     ],
   },
   plugins: [
+    new HtmlWebpackPlugin({
+      title: 'Network Graph App',
+      template: 'index.html',
+    }),
     new CopyPlugin({
       patterns: [
-        { from: "index.html" },
         { from: "src/jon_sample_data.csv", to: "jon_sample_data.csv" },
       ],
     }),
