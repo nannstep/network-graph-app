@@ -3,7 +3,6 @@
   "name": "network-graph-app",
   "version": "1.0.0",
   "private": true,
-  "main": "index.js",
   "scripts": {
     "build": "webpack --mode development",
     "start": "webpack serve --open --config webpack.config.js",
