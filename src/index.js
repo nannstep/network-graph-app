@@ -1,16 +1,12 @@
 import Sigma from 'sigma';
 import graphology from 'graphology';
 import Papa from 'papaparse';
+import EdgeCurveProgram from "@sigma/edge-curve";
+
+
 
 window.onload = function () {
-    // const graph = new graphology.Graph();
-    // graph.addNode("1", { label: "Node 1", x: 0, y: 0, size: 10, color: "blue" });
-    // graph.addNode("2", { label: "Node 2", x: 1, y: 1, size: 20, color: "red" });
-    // graph.addEdge("1", "2", { size: 5, color: "purple" });
 
-    // // Instantiate sigma.js and render the graph
-    // const sigmaInstance = new Sigma(graph, document.getElementById("container"));
-    // }
     console.log("Hello");
 
     var results = Papa.parse("./jon_sample_data.csv", {
@@ -40,7 +36,7 @@ window.onload = function () {
                     graph.addEdge(row.source, row.target, { 
                         size: 2, 
                         label: row.label,
-                        type: 'arrow',
+                        curved: true,
                         forceLabel: true
                     });
                 }
@@ -48,7 +44,12 @@ window.onload = function () {
 
             // Render the graph using Sigma.js
             const sigmaInstance = new Sigma(graph, document.getElementById("container"), {
-                renderEdgeLabels: true
+                allowInvalidContainer: true,
+                renderEdgeLabels: true,
+                defaultEdgeType: "curve",
+                edgeProgramClasses: {
+                    curve: EdgeCurveProgram
+                },
             });
         },
         error: function (error) {

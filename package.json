@@ -23,6 +23,7 @@
     "webpack-dev-server": "^5.2.2"
   },
   "dependencies": {
+    "@sigma/edge-curve": "^3.1.0",
     "graphology": "^0.26.0",
     "papaparse": "^5.5.3",
     "sigma": "^3.0.2"
