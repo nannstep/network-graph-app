@@ -27,6 +27,8 @@ window.onload = function () {
     /** @type {State} */
     const state = {};
 
+    let rowSize = {};
+
     var results = Papa.parse("./jon_sample_data.csv", {
         download: true,
         header: true,
@@ -36,14 +38,28 @@ window.onload = function () {
             // Process the parsed data here
             // For example, you can create nodes and edges based on the CSV data
             const graph = new graphology.Graph();
-            results.data.forEach(row => {
 
+            const sourceTargetCount = {};
+            results.data.forEach(row => {
+                if (row.source && row.target) {
+                    if (!sourceTargetCount[row.source]) {
+                        sourceTargetCount[row.source] = 10;
+                    }
+                    sourceTargetCount[row.source]++;
+                }
+            });
+
+            // Preprocess nodes and edges from the CSV data:
+            // Make the nodes bigger based on the number of edges
+
+
+            results.data.forEach(row => {
                 if (!graph.hasNode(row.source)) {
                     graph.addNode(row.source, {
                         label: row.source,
                         x: Math.random(),
                         y: Math.random(),
-                        size: 10,
+                        size: sourceTargetCount[row.source],
                         color: "blue"
                     });
                 }
