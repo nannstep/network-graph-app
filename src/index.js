@@ -39,6 +39,8 @@ window.onload = function () {
             // For example, you can create nodes and edges based on the CSV data
             const graph = new graphology.Graph();
 
+            // Preprocess nodes and edges from the CSV data:
+            // Make the nodes bigger based on the number of edges
             const sourceTargetCount = {};
             results.data.forEach(row => {
                 if (row.source && row.target) {
@@ -49,16 +51,37 @@ window.onload = function () {
                 }
             });
 
-            // Preprocess nodes and edges from the CSV data:
-            // Make the nodes bigger based on the number of edges
+
+            // Sort sources by number of targets (descending)
+            const sortedSources = Object.keys(sourceTargetCount).sort(
+                (a, b) => sourceTargetCount[b] - sourceTargetCount[a]
+            );
+
+            const totalNodes = sortedSources.length;
+
+            const maxEdges = Math.max(...Object.values(sourceTargetCount));
+            const minEdges = Math.min(...Object.values(sourceTargetCount));
 
 
             results.data.forEach(row => {
                 if (!graph.hasNode(row.source)) {
+                    // Random angle for dispersion
+                    const angle = Math.random() * 2 * Math.PI;
+
+                    // Most connected nodes get smallest radius (center), least get largest (outside)
+                    const minRadius = 0.5;
+                    const maxRadius = 1.5;
+                    const normalized = (sourceTargetCount[row.source] - minEdges) / (maxEdges - minEdges || 1);
+                    const inverted = 1 - normalized; // 1 for least edges, 0 for most edges
+                    const radius = minRadius + inverted * (maxRadius - minRadius);
+
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+
                     graph.addNode(row.source, {
                         label: row.source,
-                        x: Math.random(),
-                        y: Math.random(),
+                        x: x,
+                        y: y,
                         size: sourceTargetCount[row.source],
                         color: "blue"
                     });
