@@ -2,8 +2,7 @@ import Sigma from 'sigma';
 import graphology from 'graphology';
 import Papa from 'papaparse';
 import EdgeCurveProgram from "@sigma/edge-curve";
-
-
+import ForceSupervisor from "graphology-layout-force/worker";
 
 
 window.onload = function () {
@@ -98,6 +97,10 @@ window.onload = function () {
                     });
                 }
             });
+
+            // Create the spring layout and start it
+            const layout = new ForceSupervisor(graph, { isNodeFixed: (_, attr) => attr.highlighted });
+            layout.start();
 
             // Instantiate sigma:
             const renderer = new Sigma(graph, container, {
