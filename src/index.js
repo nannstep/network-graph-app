@@ -171,6 +171,29 @@ window.onload = function () {
                 return res;
             });
 
+            renderer.on("clickNode", ({ node }) => {
+                // Get node attributes
+                const data = graph.getNodeAttributes(node);
+
+                // Build summary HTML (customize as needed)
+                const html = `
+                    <strong>Node:</strong> ${node}<br>
+                    <strong>Label:</strong> ${data.label}<br>
+                    <strong>Size:</strong> ${data.size}<br>
+                    <strong>Color:</strong> ${data.color}
+                `;
+
+                // Show and update the panel
+                const panel = document.getElementById("info-panel");
+                panel.innerHTML = html;
+                panel.style.display = "block";
+            });
+
+            // Optional: Hide the panel when clicking elsewhere
+            renderer.on("clickStage", () => {
+                document.getElementById("info-panel").style.display = "none";
+            });
+
             function setHoveredNode(node) {
                 if (node) {
                     state.hoveredNode = node;
