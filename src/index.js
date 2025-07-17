@@ -50,18 +50,6 @@ window.onload = function () {
                 }
             });
 
-
-            // Sort sources by number of targets (descending)
-            const sortedSources = Object.keys(sourceTargetCount).sort(
-                (a, b) => sourceTargetCount[b] - sourceTargetCount[a]
-            );
-
-            const totalNodes = sortedSources.length;
-
-            const maxEdges = Math.max(...Object.values(sourceTargetCount));
-            const minEdges = Math.min(...Object.values(sourceTargetCount));
-
-
             results.data.forEach(row => {
                 if (!graph.hasNode(row.source)) {
 
@@ -91,7 +79,8 @@ window.onload = function () {
                 isNodeFixed: (_, attr) => attr.highlighted,
                 settings: {
                     edgeWeightInfluence: 0.5,
-                    maxIterations: 50
+                    maxIterations: 50,
+                    attraction: 0.00001,
                 }
 
             });
