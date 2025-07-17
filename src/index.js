@@ -64,23 +64,11 @@ window.onload = function () {
 
             results.data.forEach(row => {
                 if (!graph.hasNode(row.source)) {
-                    // Random angle for dispersion
-                    const angle = Math.random() * 2 * Math.PI;
-
-                    // Most connected nodes get smallest radius (center), least get largest (outside)
-                    const minRadius = 0.5;
-                    const maxRadius = 1.5;
-                    const normalized = (sourceTargetCount[row.source] - minEdges) / (maxEdges - minEdges || 1);
-                    const inverted = 1 - normalized; // 1 for least edges, 0 for most edges
-                    const radius = minRadius + inverted * (maxRadius - minRadius);
-
-                    const x = Math.cos(angle) * radius;
-                    const y = Math.sin(angle) * radius;
 
                     graph.addNode(row.source, {
                         label: row.source,
-                        x: x,
-                        y: y,
+                        x: Math.random(),
+                        y: Math.random(),
                         size: sourceTargetCount[row.source],
                         color: "blue"
                     });
@@ -99,7 +87,14 @@ window.onload = function () {
             });
 
             // Create the spring layout and start it
-            const layout = new ForceSupervisor(graph, { isNodeFixed: (_, attr) => attr.highlighted });
+            const layout = new ForceSupervisor(graph, { 
+                isNodeFixed: (_, attr) => attr.highlighted,
+                settings: {
+                    edgeWeightInfluence: 0.5,
+                    maxIterations: 50
+                }
+
+            });
             layout.start();
 
             // Instantiate sigma:
