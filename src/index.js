@@ -28,7 +28,7 @@ window.onload = function () {
 
     let rowSize = {};
 
-    var results = Papa.parse("./jon_sample_data.csv", {
+    var results = Papa.parse("./kim_version_1.csv", {
         download: true,
         header: true,
         skipEmptyLines: true,
@@ -42,32 +42,36 @@ window.onload = function () {
             // Make the nodes bigger based on the number of edges
             const sourceTargetCount = {};
             results.data.forEach(row => {
-                if (row.source && row.target) {
-                    if (!sourceTargetCount[row.source]) {
-                        sourceTargetCount[row.source] = 10;
+                if (row.Source && row.Target) {
+                    if (!sourceTargetCount[row.Source]) {
+                        sourceTargetCount[row.Source] = 10;
                     }
-                    sourceTargetCount[row.source]++;
+                    sourceTargetCount[row.Source]++;
                 }
             });
 
             results.data.forEach(row => {
-                if (!graph.hasNode(row.source)) {
+                if (!graph.hasNode(row.Source)) {
 
-                    graph.addNode(row.source, {
-                        label: row.source,
+                    graph.addNode(row.Source, {
+                        label: row.Source,
                         x: Math.random(),
                         y: Math.random(),
-                        size: sourceTargetCount[row.source],
-                        color: "blue"
+                        size: sourceTargetCount[row.Source],
+                        color: "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, "0"),
+                        OtherNames: row['OTHER NAMES'] === "0" ? "N/A" : row['OTHER NAMES'],
+                        EthnicityNationality: row['ETHNICITY/NATIONALITY'] || "N/A",
+                        PhysicalDescriptors: row['PHYSICAL DESCRIPTORS'] === "0" ? "N/A" : row['PHYSICAL DESCRIPTORS'],
+                        Locations: row['LOCATION(S)'] === "0" ? "N/A" : row['LOCATION(S)'],
                     });
                 }
             });
 
             results.data.forEach(row => {
-                if (row.source && row.target && graph.hasNode (row.source) && graph.hasNode(row.target) && !graph.hasEdge(row.source, row.target)) {
-                    graph.addEdge(row.source, row.target, { 
+                if (row.Source && row.Target && graph.hasNode (row.Source) && graph.hasNode(row.Target) && !graph.hasEdge(row.Source, row.Target)) {
+                    graph.addEdge(row.Source, row.Target, { 
                         size: 2, 
-                        label: row.label,
+                        label: row.Label,
                         curved: true,
                         forceLabel: true
                     });
@@ -77,10 +81,13 @@ window.onload = function () {
             // Create the spring layout and start it
             const layout = new ForceSupervisor(graph, { 
                 isNodeFixed: (_, attr) => attr.highlighted,
+                maxIterations: 50,
                 settings: {
-                    edgeWeightInfluence: 0.5,
-                    maxIterations: 50,
                     attraction: 0.00001,
+                    repulsion: 0.0002,
+                    gravity: 0.000008,
+                    inertia: 0.9,
+                    maxMove: 10,
                 }
 
             });
@@ -103,10 +110,12 @@ window.onload = function () {
             // Bind graph interactions:
             renderer.on("enterNode", ({ node }) => {
                 if (isDragging) return; // Ignore if dragging
+                graph.setNodeAttribute(node, "highlighted", true);
                 setHoveredNode(node);
             });
-            renderer.on("leaveNode", () => {
+            renderer.on("leaveNode", (e) => {
                 if (isDragging) return; // Ignore if dragging
+                graph.removeNodeAttribute(e.node, "highlighted");
                 setHoveredNode(undefined);
             });
 
@@ -170,16 +179,23 @@ window.onload = function () {
 
                 // Build summary HTML (customize as needed)
                 const html = `
-                    <strong>Node:</strong> ${node}<br>
-                    <strong>Label:</strong> ${data.label}<br>
-                    <strong>Size:</strong> ${data.size}<br>
-                    <strong>Color:</strong> ${data.color}
+                    <h3><u>Name</u></h3>
+                    <div>${node}</div>
+                    <h3><u>Other Names</u></h3>
+                    <div>${data.OtherNames || "N/A"}</div>
+                    <h3><u>Ethnicity / Nationality</u></h3>
+                    <div>${data.EthnicityNationality || "N/A"}</div>
+                    <h3><u>Physical Descriptors</u></h3>
+                    <div>${data.PhysicalDescriptors || "N/A"}</div>
+                    <h3><u>Locations</u></h3>
+                    <div>${data.Locations || "N/A"}</div>
                 `;
 
                 // Show and update the panel
                 const panel = document.getElementById("info-panel");
                 panel.innerHTML = html;
                 panel.style.display = "block";
+                panel.style.maxWidth = "300px";
             });
 
             // Optional: Hide the panel when clicking elsewhere

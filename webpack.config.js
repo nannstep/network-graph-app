@@ -25,7 +25,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: "index.html" },
-        { from: "src/jon_sample_data.csv", to: "jon_sample_data.csv" },
+        { from: "src/kim_version_1.csv", to: "kim_version_1.csv" },
       ],
     }),
   ],
