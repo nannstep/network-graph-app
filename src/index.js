@@ -84,7 +84,7 @@ window.onload = function () {
                 settings: {
                     attraction: 0.000001,
                     repulsion: 1,
-                    gravity: 0.00001,
+                    gravity: 0.000001,
                 }
             });
             layout.start();
