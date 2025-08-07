@@ -81,15 +81,11 @@ window.onload = function () {
             // Create the spring layout and start it
             const layout = new ForceSupervisor(graph, { 
                 isNodeFixed: (_, attr) => attr.highlighted,
-                maxIterations: 50,
                 settings: {
-                    attraction: 0.00001,
-                    repulsion: 0.0002,
-                    gravity: 0.000008,
-                    inertia: 0.9,
-                    maxMove: 10,
+                    attraction: 0.000001,
+                    repulsion: 1,
+                    gravity: 0.00001,
                 }
-
             });
             layout.start();
 
